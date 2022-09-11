@@ -20,7 +20,7 @@ const transactions = [
   {
     id: 1,
     description: 'Luz',
-    amount: -50000,
+    amount: 50001,
     date: '23/01/2021',
   },
   {
@@ -32,7 +32,7 @@ const transactions = [
   {
     id: 3,
     description: 'Internet',
-    amount: -20000,
+    amount: 20012,
     date: '23/01/2021',
   },
 ]
@@ -44,14 +44,14 @@ const transactions = [
 
 const Transaction = {
   incomes() {
-    // somar as entradas
+    return "cheguei"
   },
   expenses() {
-    // somar as saídas
+    return "Aqui"
   },
 
   total() {
-    // entradas - saídas
+    return "Discover"
   }
 }
 
@@ -66,10 +66,14 @@ const DOM = {
   },
 
   innerHTMLTransaction(transaction) {
+    const CSSclass = transaction.amount > 0 ? "income" : "expense"
+
+    const amount = Utils.formatCurrency(transaction.amount)
+
     const html = `
     <tr>
       <td class="description">${transaction.description}</td>
-      <td class="expence">${transaction.amount}</td>
+      <td class="${CSSclass}">${amount}</td>
       <td class="date">${transaction.date}</td>
       <td>
         <img src="./assets/minus.svg" alt="Remover transação" />
@@ -77,9 +81,39 @@ const DOM = {
     </tr>
     `
     return html
+  },
+
+  updateBalance() {
+    document
+      .getElementById('incomeDisplay')
+      .innerHTML = Transaction.incomes()
+    document
+      .getElementById('expenseDisplay')
+      .innerHTML = Transaction.expenses()
+    document
+      .getElementById('totalDisplay')
+      .innerHTML = Transaction.total()
+  }
+}
+
+const Utils = {
+  formatCurrency(value) {
+    const signal = Number(value) < 0 ? "-" : ""
+
+    value = String(value).replace(/\D/g, "")
+
+    value = Number(value) / 100
+
+    value = value.toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL"
+    })
+    return signal + value
   }
 }
 
 transactions.forEach(function (transaction) {
   DOM.addTransaction(transaction)
 }) // forEach funciona para objetos do tipo array. Para cada elemento ele vai executar uma funcionalidade/função
+
+DOM.updateBalance()
